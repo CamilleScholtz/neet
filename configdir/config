@@ -1,0 +1,14 @@
+# Set media dir location
+set mediadir $HOME/media/videos
+
+# Set the highlight color
+set highlight yellow
+
+# Set mpv arguments
+set arguments --fullscreen
+
+# Run the following commands before starting mpv
+# (to pause mpd for example)
+function userfunction
+	mpc -q pause
+end
