@@ -2,7 +2,7 @@
 
 ## Usage
 
-Edit ```$HOME.neet/list```, using the following syntax:
+Edit ```$HOME/.neet/list```, using the following syntax:
 ```
 Nirvana in Fire
 + 31/54
