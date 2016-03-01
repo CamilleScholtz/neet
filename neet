@@ -1,6 +1,6 @@
 #!/bin/fish
 #
-# neet - A script for mpv to easily play and manage your anime/drama/series
+# neet - A script for mpv that easily play and manage your anime/drama/series
 # onodera, https://github.com/onodera-punpun
 
 ## CONFIGURATION
@@ -64,7 +64,8 @@ function directory
 	# Create alias
 	if test -n $path
 		echo 'Show initialized. (alias set)'
-		echo "set alias \"$name\" \"$path\"" > $configdir/alias
+		# TODO: Escape this, because path's or names with ' in them could fuck up
+		echo "set alias '$name' '$path'" > $configdir/alias
 	# Throw an error if there are no directory matches
 	else 
 		echo 'No '(set_color $highlight)'directory'(set_color normal)' match.'
@@ -75,14 +76,14 @@ end
 # This function tries to get the right file name
 function episode
 	# Lists all video files in the directory
-	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|avi.part\|mkv.part\|mp4.part\)' | string replace -r '.*/' '')
+	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\)\(\.part\|\)$' | string replace -r '.*/' '')
 
 	# Sets the right file (hopefully)
 	# 'E01', 'EP01', ' 01', _01'
-	set -g file (string match -r -i '.*(E|EP| |_)[0]*'$current'[^0-9]?.*$' $episodes)
+	set -g file (string match -r -i '.*(E|EP| |_)[0]*'$current'[^0-9].*$' $episodes)
 	if test $status -ge 1
 		# Last resort (just the episode number)
-		set -g file (string match -r -i '.*[0]*'$current'[^0-9]?.*$' $episodes)
+		set -g file (string match -r -i '.*[0]*'$current'[^0-9].*$' $episodes)
 	end
 
 	# Throw error if no file is found
