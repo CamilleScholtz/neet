@@ -45,9 +45,10 @@ neet [options] [-/+]
 
 ## Installation
 
-* Add `neet` to your `$PATH`.
-* Move `configdir/*` to `$HOME/.neet`.
-* Edit `$HOME/.neet/config` to your liking, make sure to set the right
-  `$mediadir`.
+Run `make install` inside the script directory to install the script.
+`neet` can be uninstalled easily using `make uninstall`.
+`neet` can also be run from any directory like a normal script, you'll just be missing the automatic config file creation.
+
+Edit `$HOME/.neet/config` to your liking, make sure to set the right `$mediadir`.
 
 If use use CRUX you can also this port: https://github.com/6c37/crux-ports/tree/3.2/neet
