@@ -11,7 +11,7 @@ install:
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/bin
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/share/neet
 	$(INSTALL_PROG) neet $(DESTDIR)$(PREFIX)/bin/neet
-	$(INSTALL_PROG) config/* $(DESTDIR)$(PREFIX)/share/neet
+	$(INSTALL_FILE) config/* $(DESTDIR)$(PREFIX)/share/neet
 
 uninstall:
 	$(RM) $(DESTDIR)$(PREFIX)/bin/neet
