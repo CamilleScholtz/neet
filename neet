@@ -1,15 +1,35 @@
 #!/bin/fish
 #
-# neet - A script for mpv that easily play and manage your anime/drama/series
+# neet - A script for mpv to easily play and manage your anime/drama/series
 # onodera, https://github.com/onodera-punpun
 
 ## CONFIGURATION
 
-# Set config dir location
+# Set user config dir location
 set configdir $HOME/.neet
+
+# Set example config location
+set exampleconfigdir /usr/share/neet
 
 
 ## FUNCTIONS
+
+# This function creates user config
+function init
+	if not test -f $configdir/config -a -f $configdir/list
+		if not test -d $configdir
+			mkdir $configdir
+		end
+
+		if test -d $exampleconfigdir
+			cp $exampleconfigdir/* $configdir
+			echo -e "Copied example config files to $configdir!\n"
+		else
+			echo "Please copy the config files to $configdir!"
+			exit 1
+		end
+	end
+end
 
 # This function gets basic media info, like the active show name, episode count and total episodes
 function info
@@ -111,7 +131,7 @@ end
 
 ## EXECUTE
 
-# Load user configuration
+init
 source $configdir/config
 
 set realias false
