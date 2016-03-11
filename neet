@@ -14,7 +14,7 @@ set exampleconfigdir /usr/share/neet
 
 ## FUNCTIONS
 
-# This function creates user config
+# This function creates the user config files and dir
 function init
 	if not test -f $configdir/config -a -f $configdir/list
 		if not test -d $configdir
@@ -131,6 +131,7 @@ end
 
 ## EXECUTE
 
+# Create and load the user config
 init
 source $configdir/config
 
