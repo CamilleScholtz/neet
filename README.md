@@ -46,7 +46,7 @@ neet [options] [-/+]
 ## Installation
 
 * Add `neet` to your `$PATH`.
-* Move `configdir` to `$HOME/.neet`.
+* Move `configdir/*` to `$HOME/.neet`.
 * Edit `$HOME/.neet/config` to your liking, make sure to set the right
   `$mediadir`.
 
