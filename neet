@@ -19,6 +19,7 @@ function init
 	if not test -f $configdir/config -a -f $configdir/list
 		if not test -d $configdir
 			mkdir $configdir
+			touch $configdir/alias
 		end
 
 		if test -d $exampleconfigdir
