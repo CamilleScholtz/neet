@@ -24,9 +24,12 @@ function init
 
 		if test -d $exampleconfigdir
 			cp $exampleconfigdir/* $configdir
-			echo -e "Copied example config files to $configdir!\n"
+			echo "Copied example config files to $configdir!"
+			echo "Make sure to edit the config and list!"
+			exit 0
 		else
 			echo "Please copy the config files to $configdir!"
+			echo "Make sure to edit the config and list afterwards!"
 			exit 1
 		end
 	end
