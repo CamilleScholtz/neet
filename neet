@@ -3,6 +3,8 @@
 # neet - A script to easily play and manage your anime/drama/series
 # onodera, https://github.com/onodera-punpun
 
+# TODO: doesn't work with directories or files a ' in it
+
 ## CONFIGURATION
 
 # Set user config dir location
@@ -81,11 +83,10 @@ function directory
 
 	# This gets the output with the most matches
 	set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
-	
+
 	# Create alias
 	if test -n $path
 		echo 'Show initialized. (alias set)'
-		# TODO: Escape this, because path's or names with ' in them could fuck up
 		echo "set alias '$name' '$path'" > $configdir/alias
 	# Throw an error if there are no directory matches
 	else 
@@ -126,7 +127,7 @@ function play
 	userfunction
 
 	# Start mpv
-	mpv $arguments $mediadir/$path/$file
+	eval {$playercommand} $mediadir/$path/$file
 end
 
 
