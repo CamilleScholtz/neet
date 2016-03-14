@@ -60,8 +60,8 @@ function directory
 	end
 
 	# Lists all directories in mediadir
-	set -g directories (ls -d -maxdepth 1 $mediadir/* | string replace -r '.*/' '')
-	
+	set -g directories (find $mediadir/* -maxdepth 1 -type d | string replace -r '.*/' '')
+
 	# This is the actual fuzzy logic part, it compares the directory names with the active show name
 	for directory in $directories
 		set match 0
