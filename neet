@@ -63,26 +63,23 @@ function directory
 	set -g directories (ls -d $mediadir/* | string replace -r '.*/' '')
 	
 	# This is the actual fuzzy logic part, it compares the directory names with the active show name
-	function fuzzycompare
-		for directory in $directories
-			set match 0
+	for directory in $directories
+		set match 0
 
-			for word in (string split ' ' $name)
-				set wordmatch (string match -r -i -a -n $word $directory | string replace -r '.* ' '')
-				if test $status -ge 1
-					continue
-				end
-				set wordmatch (string join ' + ' $wordmatch)
-
-				set match (math $match + $wordmatch)
+		for word in (string split ' ' $name)
+			set wordmatch (string match -r -i -a -n $word $directory | string replace -r '.* ' '')
+			if test $status -ge 1
+				continue
 			end
+			set wordmatch (string join ' + ' $wordmatch)
 
-			echo $match $directory
+			set match (math $match + $wordmatch)
 		end
-	end
+
+		echo $match $directory
+	end | sort -n | read matches
 
 	# This gets the output with the most matches
-	set matches (fuzzycompare | sort -n)
 	set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
 	
 	# Create alias
@@ -105,13 +102,13 @@ function episode
 	# Sets the right file (hopefully)
 	# 'E01', 'EP01', ' 01', _01'
 	set -g file (string match -r -i '.*(E|EP| |_)[0]*'$current'[^0-9].*$' $episodes)
-	if test $status -ge 1
+	if test -z $file[1]
 		# Last resort (just the episode number)
 		set -g file (string match -r -i '.*[0]*'$current'[^0-9].*$' $episodes)
 	end
 
 	# Throw error if no file is found
-	if test -z "$file"
+	if test -z $file[1]
 		echo 'No '(set_color $highlight)'episode'(set_color normal)' match.'
 		exit 1
 	end
