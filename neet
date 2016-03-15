@@ -131,17 +131,13 @@ function episode
 	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\)\(\.part\|\)$' | string replace -r '.*/' '')
 
 	# Sets the right file (hopefully)
-	# 'E01', 'EP01', ' 01', _01'
-	set -g file (string match -r -i '.*(E|EP| |_)[0]*'$current'[^0-9].*$' $episodes)
-	if test -z $file[1]
-		# Last resort (just the episode number)
-		set -g file (string match -r -i '.*[0]*'$current'[^0-9].*$' $episodes)
-	end
+	# Matches 'E01', 'EP01', ' 01', _01' for example
+	set -g file (string match -r -i '.*[^1-9][0]*'$current'[^0-9].*$' $episodes)
 
 	# Debug output
 	if test $debug = true
 		echo 'function episode'
-		echo "    file = $file"
+		echo "    file = $file (matching part = "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
 		echo '    episodes ='
 		for line in $episodes
 			echo "        $line"
@@ -152,7 +148,7 @@ function episode
 	end
 
 	# Throw error if no file is found
-	if test -z $file[1]
+	if test -z $file
 		echo 'No '(set_color $highlight)'episode'(set_color normal)' match.'
 		exit 1
 	end
@@ -160,6 +156,13 @@ end
 
 # This function executes the userfunction and starts mpv
 function play
+	# Debug output
+	if test $debug = true
+		echo 'function play'
+		echo "     $playercommand "(string escape $mediadir/$path/$file)
+		echo
+	end
+
 	echo "Playing episode $current/$total, "(set_color $highlight)"$name"(set_color normal)"."
 	if string match -r -q '.part$' $file
 		echo 'This episode has not finished downloading yet.'
@@ -170,7 +173,7 @@ function play
 	userfunction
 
 	# Start mpv
-	eval {$playercommand} $mediadir/$path/$file
+	eval {$playercommand} (string escape $mediadir/$path/$file)
 end
 
 
