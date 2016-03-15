@@ -49,6 +49,17 @@ function info
 		set -g current (string match -r -a '[0-9]+' $active[2] | head -n 1)
 	end
 	set -g total (string match -r -a '[0-9]+' $active[2] | tail -n 1)
+
+	# Debug output
+	if test $debug = true
+		echo 'function info'
+		echo "    name = $name"
+		echo "    current = $current"
+		echo "    total = $total"
+		echo
+
+		return
+	end
 end
 
 # This function tries to fuzzy find the right directory
@@ -56,33 +67,52 @@ function directory
 	source $configdir/alias
 
 	# Check if the show already has an alias
-	if string match -r -q $name $alias[1]; and test $realias = false
+	if string match -r -q $name $alias[1]; and test $realias = false -a $debug = false
 		set -g path $alias[2]
 		return
 	end
 
 	# Lists all directories in mediadir
-	set -g directories (find $mediadir/* -maxdepth 1 -type d | string replace -r '.*/' '')
+	set -g directories (find $mediadir/* -maxdepth 0 -type d | string replace -r '.*/' '')
 
 	# This is the actual fuzzy logic part, it compares the directory names with the active show name
-	for directory in $directories
-		set match 0
+	set matches (
+		for directory in $directories
+			set match 0
 
-		for word in (string split ' ' $name)
-			set wordmatch (string match -r -i -a -n $word $directory | string replace -r '.* ' '')
-			if test $status -ge 1
-				continue
+			for word in (string split ' ' $name)
+				set wordmatch (string match -r -i -a -n $word $directory | string replace -r '.* ' '')
+				if test $status -ge 1
+					continue
+				end
+				set wordmatch (string join ' + ' $wordmatch)
+
+				set match (math $match + $wordmatch)
 			end
-			set wordmatch (string join ' + ' $wordmatch)
 
-			set match (math $match + $wordmatch)
-		end
-
-		echo $match $directory
-	end | sort -n | read matches
+			echo $match $directory
+		end | sort -n
+	)
 
 	# This gets the output with the most matches
 	set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
+
+	# Debug output
+	if test $debug = true
+		echo 'function directory'
+		echo "    path = $path"
+		echo '    directories ='
+		for line in $directories
+			echo "        $line"
+		end
+		echo '    matches ='
+		for line in $matches
+			echo "        $line"
+		end
+		echo
+
+		return
+	end
 
 	# Create alias
 	if test -n $path
@@ -106,6 +136,19 @@ function episode
 	if test -z $file[1]
 		# Last resort (just the episode number)
 		set -g file (string match -r -i '.*[0]*'$current'[^0-9].*$' $episodes)
+	end
+
+	# Debug output
+	if test $debug = true
+		echo 'function episode'
+		echo "    file = $file"
+		echo '    episodes ='
+		for line in $episodes
+			echo "        $line"
+		end
+		echo
+		
+		return
 	end
 
 	# Throw error if no file is found
@@ -137,6 +180,7 @@ end
 init
 source $configdir/config
 
+set debug false
 set realias false
 
 if test (count $argv) -eq 1
@@ -145,16 +189,21 @@ if test (count $argv) -eq 1
 			echo -e 'Usage: neet [options] [-/+]\n'
 			echo 'options:'
 			echo '  -e,   --edit            edit list'
+			echo '  -d,   --debug           print some helpful debug ouput'
 			echo '  -r,   --realias         forgets current alias'
 			echo '  -h,   --help            print help and exit'
 			exit 0
 		case -e --edit
 			eval $EDITOR $configdir/list
 			exit 0
-		case -r --realias
-			info
+		case -d --debug
+			set debug true
 
+			info
+		case -r --realias
 			set realias true
+
+			info
 		case '+*'
 			# Fail if there is a non + character in argv
 			if test -n (string replace -a '+' '' $argv[1])
