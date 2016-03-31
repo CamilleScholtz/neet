@@ -131,8 +131,16 @@ function episode
 	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\)\(\.part\|\)$' | string replace -r '.*/' '')
 
 	# Sets the right file (hopefully)
-	# Matches 'E01', 'EP01', ' 01', _01' for example
-	set -g file (string match -r -i '.*[^1-9][0]*'$current'[^0-9].*$' $episodes)
+	# 'E01', 'EP01'
+	set -g file (string match -r -i '.*(E|EP)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
+	if test -z $file
+		# ' 01', _01' '-01'
+		set -g file (string match -r -i '.*( |_|-)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
+		if test -z $file
+			# Last resort (just the episode number)
+			set -g file (string match -r -i '.*[0]*'$current'[^0-9].*$' $episodes | head -n 1)
+		end
+	end
 
 	# Debug output
 	if test $debug = true
