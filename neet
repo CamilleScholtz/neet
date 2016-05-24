@@ -39,8 +39,7 @@ end
 
 # This function gets basic media info, like the active show name, episode count and total episodes
 function info
-	# Get the acti
-	show (+)
+	# Get the active show (+)
 	set active (grep -B 1 '+' $configdir/list)
 
 	# Get the show name, current episode and total episode count
@@ -120,7 +119,6 @@ function directory
 	if test -n $path
 		echo 'Show initialized. (alias set)'
 		echo "set alias '$name' '$path'" >$configdir/alias
-		# Throw an error if there are no directory matches
 	else
 		echo 'No '(set_color $highlight)'directory'(set_color normal)' match.'
 		exit 1
