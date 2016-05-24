@@ -39,7 +39,8 @@ end
 
 # This function gets basic media info, like the active show name, episode count and total episodes
 function info
-	# Get the active show (+)
+	# Get the acti
+	show (+)
 	set active (grep -B 1 '+' $configdir/list)
 
 	# Get the show name, current episode and total episode count
@@ -67,7 +68,8 @@ function directory
 	source $configdir/alias
 
 	# Check if the show already has an alias
-	if string match -r -q $name $alias[1]; and test $realias = false -a $debug = false
+	if string match -r -q $name $alias[1]
+		and test $realias = false -a $debug = false
 		set -g path $alias[2]
 		return
 	end
@@ -117,9 +119,9 @@ function directory
 	# Create alias
 	if test -n $path
 		echo 'Show initialized. (alias set)'
-		echo "set alias '$name' '$path'" > $configdir/alias
-	# Throw an error if there are no directory matches
-	else 
+		echo "set alias '$name' '$path'" >$configdir/alias
+		# Throw an error if there are no directory matches
+	else
 		echo 'No '(set_color $highlight)'directory'(set_color normal)' match.'
 		exit 1
 	end
@@ -138,7 +140,7 @@ function episode
 		set -g file (string match -r -i '.*( |_|-)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
 		if test -z $file
 			# Last resort (just the episode number)
-			set -g file (string match -r -i '.*[0]*'$current'[^0-9].*$' $episodes | head -n 1)
+			set -g file (string match -r -i '.*'$current'[^0-9].*$' $episodes | head -n 1)
 		end
 	end
 
@@ -151,7 +153,7 @@ function episode
 			echo "        $line"
 		end
 		echo
-		
+
 		return
 	end
 
@@ -168,7 +170,7 @@ function play
 	if test $debug = true
 		echo 'function play'
 		echo "     $playercommand "(string escape $mediadir/$path/$file)
-		echo
+		exit 0
 	end
 
 	echo "Playing episode $current/$total, "(set_color $highlight)"$name"(set_color normal)"."
