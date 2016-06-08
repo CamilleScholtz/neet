@@ -3,8 +3,6 @@
 # neet - A script to easily play and manage your anime/drama/series
 # onodera, https://github.com/onodera-punpun
 
-# TODO: doesn't work with directories or files a ' in it
-
 ## CONFIGURATION
 
 # Set user config dir location
@@ -118,7 +116,7 @@ function directory
 	# Create alias
 	if test -n $path
 		echo 'Show initialized. (alias set)'
-		echo "set alias '$name' '$path'" >$configdir/alias
+		echo 'set alias '(string escape $name)' '(string escape $path) >$configdir/alias
 	else
 		echo 'No '(set_color $highlight)'directory'(set_color normal)' match.'
 		exit 1
