@@ -189,6 +189,7 @@ end
 init
 source $configdir/config
 
+# Initialize variables
 set debug false
 set realias false
 
@@ -199,7 +200,7 @@ if test (count $argv) -eq 1
 			echo 'options:'
 			echo '  -e,   --edit            edit list'
 			echo '  -d,   --debug           print some helpful debug ouput'
-			echo '  -r,   --realias         forgets current alias'
+			echo '  -a,   --alias           forgets current alias'
 			echo '  -h,   --help            print help and exit'
 			exit 0
 		case -e --edit
@@ -209,7 +210,7 @@ if test (count $argv) -eq 1
 			set debug true
 
 			info
-		case -r --realias
+		case -a --alias
 			set realias true
 
 			info
