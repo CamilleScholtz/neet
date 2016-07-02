@@ -12,8 +12,8 @@ install:
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/share/neet
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/share/fish/completions
 	$(INSTALL_PROG) neet $(DESTDIR)$(PREFIX)/bin/neet
-	$(INSTALL_FILE) config/config $(DESTDIR)$(PREFIX)/share/neet/config
-	$(INSTALL_FILE) completions/neet.fish $(DESTDIR)$(PREFIX)/share/fish/completions/neet.fish
+	$(INSTALL_FILE) config/* $(DESTDIR)$(PREFIX)/share/neet
+	$(INSTALL_FILE) completions/* $(DESTDIR)$(PREFIX)/share/fish/completions
 
 uninstall:
 	$(RM) $(DESTDIR)$(PREFIX)/bin/neet
