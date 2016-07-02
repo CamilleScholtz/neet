@@ -216,7 +216,7 @@ if test (count $argv) -eq 1
 			info
 		case '+*'
 			# Fail if there is a non + character in argv
-			if test -n (string trim -c '+' $argv[1])
+			if test -n (string trim -c '+' $argv)
 				echo 'Invalid option, use -h for help.'
 				exit 1
 			end
@@ -236,7 +236,7 @@ if test (count $argv) -eq 1
 			end
 		case '-*'
 			# Fail if there is a non - character in argv
-			if test -n (string trim -c '-' -- $argv[1])
+			if test -n (string trim -c '-' -- $argv)
 				echo 'Invalid option, use -h for help.'
 				exit 1
 			end
@@ -245,7 +245,7 @@ if test (count $argv) -eq 1
 
 			# Get current episode and decrement it by one
 			set amount (string length -- $argv)
-			set decrement (math $current + 1 - $amount)
+			set decrement (math $current - $amount)
 
 			if test $decrement -ge 1
 				sed -i "s/+ $current\/$total/+ $decrement\/$total/" $configdir/list
