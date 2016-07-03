@@ -129,10 +129,10 @@ function episode
 	# Sets the right file (hopefully)
 	# 'E01', 'EP01'
 	set -g file (string match -r -i '.*(E|EP)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
-	if set -q file
+	if not set -q file
 		# ' 01', _01' '-01'
 		set -g file (string match -r -i '.*( |_|-)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
-		if set -q file
+		if not set -q file
 			# Last resort (just the episode number)
 			set -g file (string match -r -i '.*'$current'[^0-9].*$' $episodes | head -n 1)
 		end
