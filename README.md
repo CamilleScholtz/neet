@@ -35,7 +35,7 @@ the `-r` argument, this is done for two reasons:
 neet [options] [-/+]
 -e, --edit     edit list
 -d, --debug    print some helpful debug ouput
--r, --realias  forgets current alias
+-a, --alias    forgets current alias
 -h, --help     print help and exit
 ```
 
