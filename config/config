@@ -2,7 +2,7 @@
 set mediadir $HOME/media/videos
 
 # Set video player command
-set playercommand mpv --fullscreen
+set playercommand mpv --fullscreen --no-pause
 
 # Set the highlight color
 set highlight yellow

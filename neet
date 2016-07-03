@@ -5,7 +5,7 @@
 
 ## CONFIGURATION
 
-# Set user config dir location
+# Set config dir location
 set configdir $HOME/.neet
 
 # Set example config location
@@ -43,7 +43,7 @@ function info
 	# Get the show name, current episode and total episode count
 	set -g name $active[1]
 
-	if test -z $current
+	if not set -q current
 		set -g current (string match -r -a '[0-9]+' $active[2] | head -n 1)
 	end
 	set -g total (string match -r -a '[0-9]+' $active[2] | tail -n 1)
@@ -51,10 +51,9 @@ function info
 	# Debug output
 	if test $debug = true
 		echo 'function info'
-		echo "    name = $name"
-		echo "    current = $current"
-		echo "    total = $total"
-		echo
+		echo (set_color black --bold)'-> '(set_color normal)"name = $name"
+		echo (set_color black --bold)'-> '(set_color normal)"current = $current"
+		echo (set_color black --bold)'-> '(set_color normal)"total = $total"
 
 		return
 	end
@@ -99,16 +98,15 @@ function directory
 	# Debug output
 	if test $debug = true
 		echo 'function directory'
-		echo "    path = $path"
-		echo '    directories ='
+		echo (set_color black --bold)'-> '(set_color normal)'directories ='
 		for line in $directories
-			echo "        $line"
+			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
 		end
-		echo '    matches ='
+		echo (set_color black --bold)'-> '(set_color normal)'matches ='
 		for line in $matches
-			echo "        $line"
+			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
 		end
-		echo
+		echo (set_color black --bold)'-> '(set_color normal)"path = $path"
 
 		return
 	end
@@ -131,10 +129,10 @@ function episode
 	# Sets the right file (hopefully)
 	# 'E01', 'EP01'
 	set -g file (string match -r -i '.*(E|EP)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
-	if test -z $file
+	if set -q file
 		# ' 01', _01' '-01'
 		set -g file (string match -r -i '.*( |_|-)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
-		if test -z $file
+		if set -q file
 			# Last resort (just the episode number)
 			set -g file (string match -r -i '.*'$current'[^0-9].*$' $episodes | head -n 1)
 		end
@@ -143,18 +141,17 @@ function episode
 	# Debug output
 	if test $debug = true
 		echo 'function episode'
-		echo "    file = $file (matching part = "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
-		echo '    episodes ='
+		echo (set_color black --bold)'-> '(set_color normal)'episodes ='
 		for line in $episodes
-			echo "        $line"
+			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
 		end
-		echo
+		echo (set_color black --bold)'-> '(set_color normal)"file = $file (matching part = "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
 
 		return
 	end
 
 	# Throw error if no file is found
-	if test -z $file
+	if not set -q file
 		echo 'No '(set_color $highlight)'episode'(set_color normal)' match.'
 		exit 1
 	end
@@ -165,7 +162,7 @@ function play
 	# Debug output
 	if test $debug = true
 		echo 'function play'
-		echo "     $playercommand "(string escape $mediadir/$path/$file)
+		echo (set_color black --bold)'-> '(set_color normal)"$playercommand "(string escape $mediadir/$path/$file)
 		exit 0
 	end
 
@@ -185,7 +182,7 @@ end
 
 ## EXECUTE
 
-# Create and load the user config
+# Create and load config
 init
 source $configdir/config
 
