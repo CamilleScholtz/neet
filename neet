@@ -51,9 +51,9 @@ function info
 	# Debug output
 	if test $debug = true
 		echo 'function info'
-		echo (set_color black --bold)'-> '(set_color normal)"name = $name"
-		echo (set_color black --bold)'-> '(set_color normal)"current = $current"
-		echo (set_color black --bold)'-> '(set_color normal)"total = $total"
+		echo (set_color black --bold)'-> '(set_color normal)"name: $name"
+		echo (set_color black --bold)'-> '(set_color normal)"current: $current"
+		echo (set_color black --bold)'-> '(set_color normal)"total: $total"
 
 		return
 	end
@@ -99,15 +99,15 @@ function directory
 	# Debug output
 	if test $debug = true
 		echo 'function directory'
-		echo (set_color black --bold)'-> '(set_color normal)'directories ='
+		echo (set_color black --bold)'-> '(set_color normal)'directories:'
 		for line in $directories
 			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
 		end
-		echo (set_color black --bold)'-> '(set_color normal)'matches ='
+		echo (set_color black --bold)'-> '(set_color normal)'matches:'
 		for line in $matches
 			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
 		end
-		echo (set_color black --bold)'-> '(set_color normal)"path = $path"
+		echo (set_color black --bold)'-> '(set_color normal)"path: $path"
 
 		return
 	end
@@ -142,11 +142,11 @@ function episode
 	# Debug output
 	if test $debug = true
 		echo 'function episode'
-		echo (set_color black --bold)'-> '(set_color normal)'episodes ='
+		echo (set_color black --bold)'-> '(set_color normal)'episodes:'
 		for line in $episodes
 			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
 		end
-		echo (set_color black --bold)'-> '(set_color normal)"file = $file (matching part = "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
+		echo (set_color black --bold)'-> '(set_color normal)"file: $file (matching part: "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
 
 		return
 	end
