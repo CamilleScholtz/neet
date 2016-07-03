@@ -49,7 +49,7 @@ function info
 	set -g total (string match -r -a '[0-9]+' $active[2] | tail -n 1)
 
 	# Debug output
-	if set -q debug
+	if test $debug = true
 		echo 'function info'
 		echo (set_color black --bold)'-> '(set_color normal)"name = $name"
 		echo (set_color black --bold)'-> '(set_color normal)"current = $current"
@@ -97,7 +97,7 @@ function directory
 	set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
 
 	# Debug output
-	if set -q debug
+	if test $debug = true
 		echo 'function directory'
 		echo (set_color black --bold)'-> '(set_color normal)'directories ='
 		for line in $directories
@@ -140,7 +140,7 @@ function episode
 	end
 
 	# Debug output
-	if set -q debug
+	if test $debug = true
 		echo 'function episode'
 		echo (set_color black --bold)'-> '(set_color normal)'episodes ='
 		for line in $episodes
@@ -161,7 +161,7 @@ end
 # This function executes the userfunction and starts mpv
 function play
 	# Debug output
-	if set -q debug
+	if test $debug = true
 		echo 'function play'
 		echo (set_color black --bold)'-> '(set_color normal)"$playercommand "(string escape $mediadir/$path/$file)
 		exit 0
@@ -182,6 +182,10 @@ end
 
 
 ## EXECUTE
+
+# Initialize values
+set debug false
+set realias false
 
 # Create and load config
 init
