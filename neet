@@ -49,7 +49,7 @@ function info
 	set -g total (string match -r -a '[0-9]+' $active[2] | tail -n 1)
 
 	# Debug output
-	if test $debug = true
+	if set -q debug
 		echo 'function info'
 		echo (set_color black --bold)'-> '(set_color normal)"name = $name"
 		echo (set_color black --bold)'-> '(set_color normal)"current = $current"
@@ -64,10 +64,11 @@ function directory
 	source $configdir/alias
 
 	# Check if the show already has an alias
-	if string match -r -q $name $alias[1]
-		and test $realias = false -a $debug = false
-		set -g path $alias[2]
-		return
+	if test -z "$realias" -a -z "$debug"
+		if string match -r -q $name $alias[1]
+			set -g path $alias[2]
+			return
+		end
 	end
 
 	# Lists all directories in mediadir
@@ -96,7 +97,7 @@ function directory
 	set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
 
 	# Debug output
-	if test $debug = true
+	if set -q debug
 		echo 'function directory'
 		echo (set_color black --bold)'-> '(set_color normal)'directories ='
 		for line in $directories
@@ -113,7 +114,7 @@ function directory
 
 	# Create alias
 	if test -n $path
-		echo 'Show initialized. (alias set)'
+		echo 'Show initialized (alias set).'
 		echo 'set alias '(string escape $name)' '(string escape $path) >$configdir/alias
 	else
 		echo 'No '(set_color $highlight)'directory'(set_color normal)' match.'
@@ -139,7 +140,7 @@ function episode
 	end
 
 	# Debug output
-	if test $debug = true
+	if set -q debug
 		echo 'function episode'
 		echo (set_color black --bold)'-> '(set_color normal)'episodes ='
 		for line in $episodes
@@ -160,7 +161,7 @@ end
 # This function executes the userfunction and starts mpv
 function play
 	# Debug output
-	if test $debug = true
+	if set -q debug
 		echo 'function play'
 		echo (set_color black --bold)'-> '(set_color normal)"$playercommand "(string escape $mediadir/$path/$file)
 		exit 0
@@ -185,10 +186,6 @@ end
 # Create and load config
 init
 source $configdir/config
-
-# Initialize variables
-set debug false
-set realias false
 
 if test (count $argv) -eq 1
 	switch $argv
