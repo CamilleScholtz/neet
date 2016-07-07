@@ -8,30 +8,14 @@
 # Set config dir location
 set configdir $HOME/.neet
 
-# Set example config location
-set exampleconfigdir /usr/share/neet
-
 
 ## FUNCTIONS
 
 # This function creates the user config files and dir
 function init
 	if not test -f $configdir/config -a -f $configdir/list
-		if not test -d $configdir
-			mkdir $configdir
-			touch $configdir/alias
-		end
-
-		if test -d $exampleconfigdir
-			cp $exampleconfigdir/* $configdir
-			echo "Copied example config files to $configdir!"
-			echo "Make sure to edit the config and list!"
-			exit 0
-		else
-			echo "Please copy the config files to $configdir!"
-			echo "Make sure to edit the config and list afterwards!"
-			exit 1
-		end
+		echo "$configdir/config or $configdir/list not found." >/dev/stderr
+		exit 1
 	end
 end
 
@@ -51,9 +35,9 @@ function info
 	# Debug output
 	if test $debug = true
 		echo 'function info'
-		echo (set_color black --bold)'-> '(set_color normal)"name: $name"
-		echo (set_color black --bold)'-> '(set_color normal)"current: $current"
-		echo (set_color black --bold)'-> '(set_color normal)"total: $total"
+		echo "$dark-> "$foreground"name: $name"
+		echo "$dark-> "$foreground"current: $current"
+		echo "$dark-> "$foreground"total: $total"
 
 		return
 	end
@@ -64,7 +48,7 @@ function directory
 	source $configdir/alias
 
 	# Check if the show already has an alias
-	if test -z "$realias" -a -z "$debug"
+	if test "$realias" = false -a "$debug" = false
 		if string match -r -q $name $alias[1]
 			set -g path $alias[2]
 			return
@@ -99,15 +83,15 @@ function directory
 	# Debug output
 	if test $debug = true
 		echo 'function directory'
-		echo (set_color black --bold)'-> '(set_color normal)'directories:'
+		echo "$dark-> "$foreground"directories:"
 		for line in $directories
-			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
+			echo "$dark-> -> $foreground$line"
 		end
-		echo (set_color black --bold)'-> '(set_color normal)'matches:'
+		echo "$dark-> "$foreground"matches:"
 		for line in $matches
-			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
+			echo "$dark-> -> $foreground$line"
 		end
-		echo (set_color black --bold)'-> '(set_color normal)"path: $path"
+		echo "$dark-> "$foreground"path: $path"
 
 		return
 	end
@@ -117,7 +101,7 @@ function directory
 		echo 'Show initialized (alias set).'
 		echo 'set alias '(string escape $name)' '(string escape $path) >$configdir/alias
 	else
-		echo 'No '(set_color $highlight)'directory'(set_color normal)' match.'
+		echo "No "$bright"directory$foreground match." >/dev/stderr
 		exit 1
 	end
 end
@@ -142,18 +126,18 @@ function episode
 	# Debug output
 	if test $debug = true
 		echo 'function episode'
-		echo (set_color black --bold)'-> '(set_color normal)'episodes:'
+		echo "$dark-> "$foreground"episodes:"
 		for line in $episodes
-			echo (set_color black --bold)'-> -> '(set_color normal)"$line"
+			echo "$dark-> -> $foreground$line:"
 		end
-		echo (set_color black --bold)'-> '(set_color normal)"file: $file (matching part: "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
+		echo "$dark-> "$foreground"file: $file (matching part: "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
 
 		return
 	end
 
 	# Throw error if no file is found
 	if not set -q file
-		echo 'No '(set_color $highlight)'episode'(set_color normal)' match.'
+		echo "No "$bright"episode$foreground match." >/dev/stderr
 		exit 1
 	end
 end
@@ -163,11 +147,11 @@ function play
 	# Debug output
 	if test $debug = true
 		echo 'function play'
-		echo (set_color black --bold)'-> '(set_color normal)"$playercommand "(string escape $mediadir/$path/$file)
+		echo "$dark-> $foreground$playercommand "(string escape $mediadir/$path/$file)
 		exit 0
 	end
 
-	echo "Playing episode $current/$total, "(set_color $highlight)"$name"(set_color normal)"."
+	echo "Playing episode $current/$total, $bright$name$foreground."
 	if string match -r -q '.part$' $file
 		echo 'This episode has not finished downloading yet.'
 		echo 'Playback might be buggy or not work at all!'
@@ -190,6 +174,11 @@ set realias false
 # Create and load config
 init
 source $configdir/config
+
+# Load colors
+set foreground (set_color $foreground)
+set bright (set_color $bright)
+set dark (set_color $dark)
 
 if test (count $argv) -eq 1
 	switch $argv
@@ -215,7 +204,7 @@ if test (count $argv) -eq 1
 		case '+*'
 			# Fail if there is a non + character in argv
 			if test -n (string trim -c '+' $argv)
-				echo 'Invalid option, use -h for help.'
+				echo 'Invalid option, use -h for help.' >/dev/stderr
 				exit 1
 			end
 
@@ -229,13 +218,13 @@ if test (count $argv) -eq 1
 				sed -i "s/+ $current\/$total/+ $increment\/$total/" "$configdir/list"
 				set current $increment
 			else
-				echo "Episode $total is the last episode."
+				echo "Episode $total is the last episode." >/dev/stderr
 				exit 1
 			end
 		case '-*'
 			# Fail if there is a non - character in argv
 			if test -n (string trim -c '-' -- $argv)
-				echo 'Invalid option, use -h for help.'
+				echo 'Invalid option, use -h for help.' >/dev/stderr
 				exit 1
 			end
 
@@ -249,11 +238,11 @@ if test (count $argv) -eq 1
 				sed -i "s/+ $current\/$total/+ $decrement\/$total/" $configdir/list
 				set current $decrement
 			else
-				echo 'There is no episode 0.'
+				echo 'There is no episode 0.' >/dev/stderr
 				exit 1
 			end
 		case '*'
-			echo 'Invalid option, use -h for help.'
+			echo 'Invalid option, use -h for help.' >/dev/stderr
 			exit 1
 	end
 else
