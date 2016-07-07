@@ -47,7 +47,7 @@ end
 function directory
 	source $configdir/alias
 
-	# Check if the show already has an alias
+	# Check if the show already has an alias, or if debug is enabled, return if that's the case
 	if test "$realias" = false -a "$debug" = false
 		if string match -q -r $name $alias[1]
 			set -g path $alias[2]
@@ -97,10 +97,11 @@ function directory
 	end
 
 	# Create alias
-	if test -n $path
+	if not set -q file
 		echo 'Show initialized (alias set).'
 		echo 'set alias '(string escape $name)' '(string escape $path) >$configdir/alias
 	else
+		# Throw an error if no file is found
 		echo "No "$bright"directory$foreground match." >/dev/stderr
 		exit 1
 	end
@@ -109,7 +110,7 @@ end
 # This function tries to get the right file name
 function episode
 	# Lists all video files in the directory
-	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\)\(\.part\|\)$' | string replace -r '.*/' '')
+	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|flv\)\(\.part\|\)$' | string replace -r '.*/' '')
 
 	# Sets the right file (hopefully)
 	# 'E01', 'EP01'
@@ -135,7 +136,7 @@ function episode
 		return
 	end
 
-	# Throw error if no file is found
+	# Throw an error if no file is found
 	if not set -q file
 		echo "No "$bright"episode$foreground match." >/dev/stderr
 		exit 1
@@ -262,7 +263,7 @@ if test (count $argv) -ge 1
 						exit 1
 					end
 				else
-					echo "Please speicify a set episode number." >/dev/stderr
+					echo "Please specify a set episode number." >/dev/stderr
 					exit 1
 				end
 			case '*'
