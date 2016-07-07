@@ -49,7 +49,7 @@ function directory
 
 	# Check if the show already has an alias
 	if test "$realias" = false -a "$debug" = false
-		if string match -r -q $name $alias[1]
+		if string match -q -r $name $alias[1]
 			set -g path $alias[2]
 			return
 		end
@@ -152,7 +152,7 @@ function play
 	end
 
 	echo "Playing episode $current/$total, $bright$name$foreground."
-	if string match -r -q '.part$' $file
+	if string match -q -r '.part$' $file
 		echo 'This episode has not finished downloading yet.'
 		echo 'Playback might be buggy or not work at all!'
 	end
