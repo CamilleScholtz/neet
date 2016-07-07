@@ -67,5 +67,7 @@ If use use CRUX you can also this port: https://github.com/6c37/crux-ports-git/t
 
 ## Notes
 
+`neet` ships with a fish function named `cdv`, which cds to the active show directory.
+
 Surlent created a perl script inspired by `neet`, be sure to check it out:
 https://bitbucket.org/surlent777/neet/src
