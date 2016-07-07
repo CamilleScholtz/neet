@@ -189,9 +189,9 @@ if test (count $argv) -ge 1
 				echo '  -a,   --alias           forgets current alias'
 				echo '  -d,   --debug           print some helpful debug ouput'
 				echo '  -e,   --edit            edit list'
-				echo '  -n,   --next            play next episode'
-				echo '  -p,   --previous        play previous episode'
-				echo '  -s,   --set             set current episode'
+				echo '  -n,   --next            set and play next episode'
+				echo '  -p,   --previous        set and play previous episode'
+				echo '  -s,   --set             set and play specified episode'
 				echo '  -h,   --help            print help and exit'
 				exit 0
 			case a alias
