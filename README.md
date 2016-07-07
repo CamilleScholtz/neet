@@ -1,5 +1,7 @@
 # neet
 
+A script to easily play and manage your anime/drama/series.
+
 ## Usage
 
 Edit `$HOME/.neet/list`, using the following syntax:
