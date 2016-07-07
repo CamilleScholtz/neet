@@ -14,7 +14,7 @@ Robber
 ```
 
 `Nirvana in Fire` and `Robber` being the series names, `31/54` and
-`5/20` being current-episode/total-episodes and `+` indicating the
+`5/20` being current-episode/total-episodes and the `+` prefix indicating the
 show `neet` uses.
 
 Use `neet` to launch mpv, it will automatically detect the right directory
@@ -28,6 +28,7 @@ the `-r` argument, this is done for two reasons:
   algorithm.
 * If `neet` can't find the right directory somehow, you can specify it
   yourself in this file.
+
 
 ## Options
 
@@ -44,18 +45,27 @@ options:
   -h,   --help            print help and exit
 ```
 
+
 ## Dependencies
 
 * fish (2.3.0+)
 * getopts (https://github.com/fisherman/getopts)
-* mpv (optional, you can configure this script to use different media players)
+* mpv (optional, you can configure this script to use a different media player)
+
 
 ## Installation
 
 Run `make install` inside the script directory to install the script.
 `neet` can be uninstalled easily using `make uninstall`.
-`neet` can also be run from any directory like a normal script, you'll just be missing the automatic config file creation.
+`neet` can also be run from any directory like a normal script.
+Be sure to copy `./configs/{config,list}` or `/usr/share/neet/{config,list}` to `$HOME/.neet`.
 
 Edit `$HOME/.neet/config` to your liking, make sure to set the right `$mediadir`.
 
-If use use CRUX you can also this port: https://github.com/6c37/crux-ports/tree/3.2/neet
+If use use CRUX you can also this port: https://github.com/6c37/crux-ports-git/tree/3.2/neet
+
+
+## Notes
+
+Surlent created a perl script inspired by `neet`, be sure to check it out:
+https://bitbucket.org/surlent777/neet/src
