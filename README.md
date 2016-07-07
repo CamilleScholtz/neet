@@ -47,8 +47,8 @@ options:
 ## Dependencies
 
 * fish (2.3.0+)
-* getopts
-* mpv
+* getopts (https://github.com/fisherman/getopts)
+* mpv (optional, you can configure this script to use different media players)
 
 ## Installation
 
