@@ -180,70 +180,95 @@ set foreground (set_color $foreground)
 set bright (set_color $bright)
 set dark (set_color $dark)
 
-if test (count $argv) -eq 1
-	switch $argv
-		case -h --help
-			echo -e 'Usage: neet [options] [-/+]\n'
-			echo 'options:'
-			echo '  -e,   --edit            edit list'
-			echo '  -d,   --debug           print some helpful debug ouput'
-			echo '  -a,   --alias           forgets current alias'
-			echo '  -h,   --help            print help and exit'
-			exit 0
-		case -e --edit
-			eval $EDITOR $configdir/list
-			exit 0
-		case -d --debug
-			set debug true
+if test (count $argv) -ge 1
+	getopts $argv | while read -l opt val
+		switch $opt
+			case h help
+				echo -e 'Usage: neet [options]\n'
+				echo 'options:'
+				echo '  -a,   --alias           forgets current alias'
+				echo '  -d,   --debug           print some helpful debug ouput'
+				echo '  -e,   --edit            edit list'
+				echo '  -n,   --next            play next episode'
+				echo '  -p,   --previous        play previous episode'
+				echo '  -s,   --set             set current episode'
+				echo '  -h,   --help            print help and exit'
+				exit 0
+			case a alias
+				set realias true
+				info
+			case d debug
+				set debug true
+				info
+			case e edit
+				eval $EDITOR $configdir/list
+				exit 0
+			case n next
+				info
 
-			info
-		case -a --alias
-			set realias true
+				if test -n $val
+					if string match -q -r '^[0-9]*$' $val
+						set increment (math $current + $val)
+					else
+						echo "Increment episode value is not a number." >/dev/stderr
+						exit 1
+					end
+				else
+					set increment (math $current + 1)
+				end
 
-			info
-		case '+*'
-			# Fail if there is a non + character in argv
-			if test -n (string trim -c '+' $argv)
+				if test $increment -le $total
+					sed -i "s/+ $current\/$total/+ $increment\/$total/" "$configdir/list"
+					set current $increment
+				else
+					echo "Episode $total is the last episode." >/dev/stderr
+					exit 1
+				end
+			case p previous
+				info
+
+				if test -n $val
+					if string match -q -r '^[0-9]*$' $val
+						set decrement (math $current - $val)
+					else
+						echo "Decrement episode value is not a number." >/dev/stderr
+						exit 1
+					end
+				else
+					set decrement (math $current - 1)
+				end
+
+				if test $decrement -ge 1
+					sed -i "s/+ $current\/$total/+ $decrement\/$total/" $configdir/list
+					set current $decrement
+				else
+					echo 'Episode 1 is the first episode.' >/dev/stderr
+					exit 1
+				end
+			case s set
+				info
+
+				if test -n $val
+					if string match -q -r '^[0-9]*$' $val
+						if test $val -ge 1 -a $val -le $total
+							sed -i "s/+ $current\/$total/+ $val\/$total/" $configdir/list
+							set current $val
+						else
+							echo "please specify an episode between 1 and $total." >/dev/stderr
+							exit 1
+						end
+					else
+						echo "Set episode value is not a number." >/dev/stderr
+						exit 1
+					end
+				else
+					echo "Please speicify a set episode number." >/dev/stderr
+					exit 1
+				end
+			case '*'
 				echo 'Invalid option, use -h for help.' >/dev/stderr
 				exit 1
-			end
-
-			info
-
-			# Get current episode and increment it by one
-			set amount (string length $argv)
-			set increment (math $current + $amount)
-
-			if test $increment -le $total
-				sed -i "s/+ $current\/$total/+ $increment\/$total/" "$configdir/list"
-				set current $increment
-			else
-				echo "Episode $total is the last episode." >/dev/stderr
-				exit 1
-			end
-		case '-*'
-			# Fail if there is a non - character in argv
-			if test -n (string trim -c '-' -- $argv)
-				echo 'Invalid option, use -h for help.' >/dev/stderr
-				exit 1
-			end
-
-			info
-
-			# Get current episode and decrement it by one
-			set amount (string length -- $argv)
-			set decrement (math $current - $amount)
-
-			if test $decrement -ge 1
-				sed -i "s/+ $current\/$total/+ $decrement\/$total/" $configdir/list
-				set current $decrement
-			else
-				echo 'There is no episode 0.' >/dev/stderr
-				exit 1
-			end
-		case '*'
-			echo 'Invalid option, use -h for help.' >/dev/stderr
-			exit 1
+		end
 	end
 else
 	info
