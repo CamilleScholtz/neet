@@ -32,7 +32,7 @@ the `-r` argument, this is done for two reasons:
   yourself in this file.
 
 
-## Options
+## Help
 
 ```
 Usage: neet [options]
