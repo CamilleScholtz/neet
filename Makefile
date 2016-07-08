@@ -31,4 +31,3 @@ uninstall:
 	$(RM) $(DESTDIR)$(PREFIX)/share/fish/completions/neet.fish
 	@echo "Uninstalling functions."
 	$(RM) $(DESTDIR)$(PREFIX)/share/fish/functions/cdv.fish
-

@@ -1,8 +1,11 @@
-# neet
+neet
+====
 
 A script to easily play and manage your anime/drama/series.
 
-## Usage
+
+Usage
+-----
 
 Edit `$HOME/.neet/list`, using the following syntax:
 ```
@@ -32,7 +35,8 @@ the `-r` argument, this is done for two reasons:
   yourself in this file.
 
 
-## Help
+Help
+----
 
 ```
 Usage: neet [options]
@@ -48,26 +52,29 @@ options:
 ```
 
 
-## Dependencies
+Dependencies
+------------
 
 * fish (2.3.0+)
 * getopts (https://github.com/fisherman/getopts)
 * mpv (optional, you can configure this script to use a different media player)
 
 
-## Installation
+Installation
+------------
 
-Run `make install` inside the script directory to install the script.
+Run `make install` inside the `neet` directory to install the script.
 `neet` can be uninstalled easily using `make uninstall`.
 `neet` can also be run from any directory like a normal script.
 Be sure to copy `./configs/{config,list}` or `/usr/share/neet/{config,list}` to `$HOME/.neet`.
 
 Edit `$HOME/.neet/config` to your liking, make sure to set the right `$mediadir`.
 
-If use use CRUX you can also this port: https://github.com/6c37/crux-ports-git/tree/3.2/neet
+If you use CRUX you can also install using this port: https://github.com/6c37/crux-ports-git/tree/3.2/neet
 
 
-## Notes
+Notes
+-----
 
 `neet` ships with a fish function named `cdv`, which cds to the active show directory.
 

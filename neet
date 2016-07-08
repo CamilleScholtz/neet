@@ -11,14 +11,6 @@ set configdir $HOME/.neet
 
 ## FUNCTIONS
 
-# This function creates the user config files and dir
-function init
-	if not test -f $configdir/config -a -f $configdir/list
-		echo "$configdir/config or $configdir/list not found." >/dev/stderr
-		exit 1
-	end
-end
-
 # This function gets basic media info, like the active show name, episode count and total episodes
 function info
 	# Get the active show (+)
@@ -168,12 +160,16 @@ end
 
 ## EXECUTE
 
-# Initialize values
+# Initialize default option values
 set debug false
 set realias false
 
-# Create and load config
-init
+# Load config
+if not test -f $configdir/config -a -f $configdir/list
+	echo "$configdir/config or $configdir/list not found." >/dev/stderr
+	echo "Move /usr/share/neet/config to $configdir, and create a list." >/dev/stderr
+	exit 1
+end
 source $configdir/config
 
 # Load colors
