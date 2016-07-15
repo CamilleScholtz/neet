@@ -1,5 +1,4 @@
-The GNU General Public License, Version 2, June 1991 (GPLv2)
-============================================================
+# The GNU General Public License, Version 2, June 1991 (GPLv2)
 
 > Copyright (C) 1989, 1991 Free Software Foundation, Inc.
 > 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
@@ -8,8 +7,7 @@ Everyone is permitted to copy and distribute verbatim copies of this license
 document, but changing it is not allowed.
 
 
-Preamble
---------
+## Preamble
 
 The licenses for most software are designed to take away your freedom to share
 and change it. By contrast, the GNU General Public License is intended to
@@ -57,8 +55,7 @@ The precise terms and conditions for copying, distribution and modification
 follow.
 
 
-Terms And Conditions For Copying, Distribution And Modification
----------------------------------------------------------------
+## Terms And Conditions For Copying, Distribution And Modification
 
 **0.** This License applies to any program or other work which contains a notice
 placed by the copyright holder saying it may be distributed under the terms of
@@ -242,8 +239,7 @@ all derivatives of our free software and of promoting the sharing and reuse of
 software generally.
 
 
-No Warranty
------------
+## No Warranty
 
 **11.** BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR
 THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE
