@@ -76,12 +76,9 @@ function directory
 	if test $debug = true
 		echo 'function directory'
 		echo "$dark-> "$foreground"directories:"
-		for line in $directories
-			echo "$dark-> -> $foreground$line"
-		end
-		echo "$dark-> "$foreground"matches:"
-		for line in $matches
-			echo "$dark-> -> $foreground$line"
+		for line in (seq (count $directories))
+			echo "$dark-> -> $foreground$directories[$line]"
+			echo "$dark-> -> -> "$foreground"matches: "(echo $matches[$line] | cut -d ' ' -f 1)
 		end
 		echo "$dark-> "$foreground"path: $path"
 
@@ -105,13 +102,13 @@ function episode
 	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|flv\)\(\.part\|\)$' | string replace -r '.*/' '')
 
 	# Sets the right file (hopefully)
-	# 'E01', 'EP01'
+	# regex 1 - 'E01', 'EP01'
 	set -g file (string match -r -i '.*(E|EP)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
-	if not set -q file
-		# ' 01', _01' '-01'
-		set -g file (string match -r -i '.*( |_|-)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
-		if not set -q file
-			# Last resort (just the episode number)
+	if test -z "$file"
+		# regex 2 - ' 01', _01', '-01', '.01'
+		set -g file (string match -r -i '.*( |_|-|\.)[0]*'$current'[^0-9].*$' $episodes | head -n 1)
+		if test -z "$file"
+			# regex 3 - Last resort, just the episode number
 			set -g file (string match -r -i '.*'$current'[^0-9].*$' $episodes | head -n 1)
 		end
 	end
@@ -121,9 +118,18 @@ function episode
 		echo 'function episode'
 		echo "$dark-> "$foreground"episodes:"
 		for line in $episodes
-			echo "$dark-> -> $foreground$line:"
+			echo "$dark-> -> $foreground$line"
+			if string match -q -r -i '.*(E|EP)[0]*'$current'[^0-9].*$' $line
+				echo "$dark-> -> -> "$foreground"match (using regex 1): "(string match -r -i '(E|EP)[0]*'$current'[^0-9]' $line | head -n 1)
+			end
+			if string match -q -r -i '.*( |_|-|\.)[0]*'$current'[^0-9].*$' $line
+				echo "$dark-> -> -> "$foreground"match (using regex 2): "(string match -r -i '( |_|-|\.)[0]*'$current'[^0-9]' $line | head -n 1)
+			end
+			if string match -q -r -i '.*'$current'[^0-9].*$' $line
+				echo "$dark-> -> -> "$foreground"match (using regex 3): "(string match -r -i $current'[^0-9]' $line | head -n 1)
+			end
 		end
-		echo "$dark-> "$foreground"file: $file (matching part: "(string match -r -i '[^1-9][0]*'$current'[^0-9]' $episodes)")"
+		echo "$dark-> "$foreground"file: $file"
 
 		return
 	end
