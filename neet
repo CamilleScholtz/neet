@@ -89,7 +89,6 @@ function directory
 
 	# Create alias
 	if not set -q file
-		echo -e 'Alias set.\n'
 		echo 'set alias '(string escape $name)' '(string escape $path) >$configdir/alias
 	else
 		# Throw an error if no file is found
@@ -152,13 +151,13 @@ function play
 		exit 0
 	end
 
+	echo "Playing episode $current/$total, $bright$name$foreground."
+
 	# Send warning on .part prefix
 	if string match -q -r '.part$' $file
-		echo 'This episode has not finished downloading yet.'
-		echo -e 'Playback might be buggy or not work at all!\n'
+		echo "$dark-> "$foreground"This episode has not finished downloading yet."
+		echo "$dark-> "$foreground"Playback might be buggy or not work at all!"
 	end
-
-	echo "Playing episode $current/$total, $bright$name$foreground."
 
 	# Execute user set config function
 	userfunction
@@ -193,7 +192,7 @@ if test (count $argv) -ge 1
 			case h help
 				echo -e 'Usage: neet [options]\n'
 				echo 'options:'
-				echo '  -a,   --alias           forgets current alias'
+				echo '  -a,   --alias           reinitialize alias'
 				echo '  -d,   --debug           print some helpful debug ouput'
 				echo '  -e,   --edit            edit list'
 				echo '  -n,   --next            set and play next episode'
