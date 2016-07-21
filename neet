@@ -121,13 +121,13 @@ function episode
 		for line in $episodes
 			echo "$dark-> -> $foreground$line"
 			if string match -q -r -i '.*(e|ep|episode)[0 ]*'$current'[^0-9].*$' $line
-				echo "$dark-> -> -> "$foreground"matches (regex 1): "(string match -r -i '(e|ep|episode)[0 ]*'$current'[^0-9]' $line | head -n 1)
+				echo "$dark-> -> -> "$foreground"match (regex 1): "(string match -r -i '(e|ep|episode)[0 ]*'$current'[^0-9]' $line | head -n 1)
 			end
 			if string match -q -r -i '.*( |_|-|\.)[0 ]*'$current'[^0-9].*$' $line
-				echo "$dark-> -> -> "$foreground"matches (regex 2): "(string match -r -i '( |_|-|\.)[0 ]*'$current'[^0-9]' $line | head -n 1)
+				echo "$dark-> -> -> "$foreground"match (regex 2): "(string match -r -i '( |_|-|\.)[0 ]*'$current'[^0-9]' $line | head -n 1)
 			end
 			if string match -q -r -i '.*'$current'[^0-9].*$' $line
-				echo "$dark-> -> -> "$foreground"matches (regex 3): "(string match -r -i $current'[^0-9]' $line | head -n 1)
+				echo "$dark-> -> -> "$foreground"match (regex 3): "(string match -r -i $current'[^0-9]' $line | head -n 1)
 			end
 		end
 		echo "$dark-> "$foreground"file: $file"
@@ -155,8 +155,8 @@ function play
 
 	# Send warning on .part prefix
 	if string match -q -r '.part$' $file
-		echo "$dark-> "$foreground"This episode has not finished downloading yet."
-		echo "$dark-> "$foreground"Playback might be buggy or not work at all!"
+		echo "$dark-> "$foreground"This episode has not finished downloading yet"
+		echo "$dark-> "$foreground"Playback might be buggy or not work at all"
 	end
 
 	# Execute user set config function
