@@ -104,7 +104,7 @@ function episode
 
 	# Sets the right file (hopefully)
 	# regex 1
-	set -g file (string match -r -i '.*(e|ep|episode)[0 ]*'$current'[^0-9].*$' $episodes | head -n 1)
+	set -g file (string match -r -i '.*(e|ep|episode|第)[0 ]*'$current'[^0-9].*$' $episodes | head -n 1)
 	if test -z "$file"
 		# regex 2
 		set -g file (string match -r -i '.*( |_|-|\.)[0 ]*'$current'[^0-9].*$' $episodes | head -n 1)
@@ -120,8 +120,8 @@ function episode
 		echo "$dark-> "$foreground"episodes:"
 		for line in $episodes
 			echo "$dark-> -> $foreground$line"
-			if string match -q -r -i '.*(e|ep|episode)[0 ]*'$current'[^0-9].*$' $line
-				echo "$dark-> -> -> "$foreground"match (regex 1): "(string match -r -i '(e|ep|episode)[0 ]*'$current'[^0-9]' $line | head -n 1)
+			if string match -q -r -i '.*(e|ep|episode|第)[0 ]*'$current'[^0-9].*$' $line
+				echo "$dark-> -> -> "$foreground"match (regex 1): "(string match -r -i '(e|ep|episode|第)[0 ]*'$current'[^0-9]' $line | head -n 1)
 			end
 			if string match -q -r -i '.*( |_|-|\.)[0 ]*'$current'[^0-9].*$' $line
 				echo "$dark-> -> -> "$foreground"match (regex 2): "(string match -r -i '( |_|-|\.)[0 ]*'$current'[^0-9]' $line | head -n 1)
