@@ -5,32 +5,14 @@ A script to easily play and manage your anime/drama/series.
 
 ## Usage
 
-Edit `$HOME/.neet/list`, using the following syntax:
-```
-Nirvana in Fire
-+ 31/54
-
-Robber
-5/20
-
-...
-```
-
-`Nirvana in Fire` and `Robber` being the series names, `31/54` and
-`5/20` being current-episode/total-episodes and the `+` prefix indicating the
-show `neet` uses.
+Edit `$HOME/.neet/list`, just use simple fish `set` commands to set the show `name`, `current` episode, and `total` episode count.
+You can optional set an `userregex` or `userpath` for finer control, or in case `neet` fails to find the right directory
+or file automagically.
 
 Use `neet` to launch mpv, it will automatically detect the right directory
 and episode to play (hopefully). use the `-p` and `-n` flags to launch
 the previous and next episode respectivly. It is possible to specify a value, for example `-n 10`
 jumps 20 episodes.
-
-`neet` will create a directory alias (in `$HOME/.neet/alias`) when you set a new active series or use
-the `-r` argument, this is done for two reasons:
-* It's makes `neet` slightly quicker by skipping the whole directory detection
-  algorithm.
-* If `neet` can't find the right directory somehow, you can specify it
-  yourself in this file.
 
 
 ## Help
@@ -39,7 +21,6 @@ the `-r` argument, this is done for two reasons:
 Usage: neet [options]
 
 options:
-  -a,   --alias           forgets current alias
   -d,   --debug           print some helpful debug ouput
   -e,   --edit            edit list
   -n,   --next            set and play next episode
