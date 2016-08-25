@@ -1,5 +1,6 @@
-complete -c neet -f -o d -l debug -d 'Print some helpful debug output'
+complete -c neet -f -o d -l debug -d 'Print debug info and exit'
 complete -c neet -f -o e -l edit -d 'Edit list'
+complete -c neet -f -o l -l location -d 'Print location and exit'
 complete -c neet -f -o n -l next -d 'Set and play next episode'
 complete -c neet -f -o p -l previous -d 'Set and play previous episode'
 complete -c neet -f -o s -l set -d 'Set and play specified episode'

@@ -181,8 +181,9 @@ getopts $argv | while read -l opt val
 		case h help
 			echo -e 'Usage: neet [options]\n'
 			echo 'options:'
-			echo '  -d,   --debug           print some helpful debug ouput'
+			echo '  -d,   --debug           print debug info and exit'
 			echo '  -e,   --edit            edit list'
+			echo '  -l,   --location        print location and exit'
 			echo '  -n,   --next            set and play next episode'
 			echo '  -p,   --previous        set and play previous episode'
 			echo '  -s,   --set             set and play specified episode'
@@ -192,6 +193,10 @@ getopts $argv | while read -l opt val
 			set debug true
 		case e edit
 			eval $EDITOR $configdir/list
+			exit 0
+		case l location
+			directory
+			string escape $mediadir/$path
 			exit 0
 		case n next
 			if test -n $val
@@ -206,7 +211,7 @@ getopts $argv | while read -l opt val
 			end
 
 			if test $increment -le $total
-				sed -i "s/+ $current\/$total/+ $increment\/$total/" "$configdir/list"
+				sed -i "s/^set current $current\$/set current $increment/" $configdir/list
 				set current $increment
 			else
 				echo "Episode $total is the last episode." >/dev/stderr
@@ -225,7 +230,7 @@ getopts $argv | while read -l opt val
 			end
 
 			if test $decrement -ge 1
-				sed -i "s/+ $current\/$total/+ $decrement\/$total/" $configdir/list
+				sed -i "s/^set current $current\$/set current $decrement/" $configdir/list
 				set current $decrement
 			else
 				echo 'Episode 1 is the first episode.' >/dev/stderr
@@ -235,7 +240,7 @@ getopts $argv | while read -l opt val
 			if test -n $val
 				if string match -q -r '^[0-9]*$' $val
 					if test $val -ge 1 -a $val -le $total
-						sed -i "s/+ $current\/$total/+ $val\/$total/" $configdir/list
+						sed -i "s/^set current $current\$/set current $val/" $configdir/list
 						set current $val
 					else
 						echo "please specify an episode between 1 and $total." >/dev/stderr
