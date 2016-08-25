@@ -196,7 +196,7 @@ getopts $argv | while read -l opt val
 			exit 0
 		case l location
 			directory
-			string escape $mediadir/$path
+			echo $mediadir/$path
 			exit 0
 		case n next
 			if test -n $val
