@@ -76,25 +76,25 @@ function episode
 	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|flv\)\(\.part\|\)$' | string replace -r '.*/' '')
 
 	# Set regex thingies
-	set regex1 '.*(e|ep|episode|第)[0 ]*'$current'[^0-9].*$'
-	set regex2 '.*( |_|-|#|\.)[0 ]*'$current'[^0-9].*$'
-	set regex3 '.*'$current'[^0-9].*$'
+	set regex1 '(e|ep|episode|第)[0 ]*'$current'[^0-9]'
+	set regex2 '( |_|-|#|\.)[0 ]*'$current'[^0-9]'
+	set regex3 $current'[^0-9]'
 
 	# Sets the right file (hopefully):
 	# Try regex1
-	set -g file (string match -r -i $regex1 $episodes | head -n 1)
+	set -g file (string match -r -i '.*'$regex1'.*' $episodes | head -n 1)
 	if test -z "$file"
 		# Try regex2
-		set -g file (string match -r -i $regex2 $episodes | head -n 1)
+		set -g file (string match -r -i '.*'$regex2'.*' $episodes | head -n 1)
 		if test -z "$file"
 			# Try regex3
-			set -g file (string match -r -i $regex3 $episodes | head -n 1)
+			set -g file (string match -r -i '.*'$regex3'.*' $episodes | head -n 1)
 		end
 	end
 
 	# Check if user has a custom regex set, if that's the case, (possibly) overwrite $file
 	if set -q userregex
-		set -g file (string match -r -i $userregex $episodes | head -n 1)
+		set -g file (string match -r -i '.*'$userregex'.*' $episodes | head -n 1)
 	end
 
 	# Debug output
@@ -103,18 +103,18 @@ function episode
 		echo "$dark-> "$foreground"episodes:"
 		for line in $episodes
 			if set -q userregex
-				if string match -q -r -i $userregex $line
+				if string match -q -r -i '.*'$userregex'.*' $line
 					echo "$dark-> -> -> "$foreground"match (userregex): "(string match -r -i $userregex $line | head -n 1)
 				end
 			end
 			echo "$dark-> -> $foreground$line"
-			if string match -q -r -i $regex1 $line
+			if string match -q -r -i '.*'$regex1'.*' $line
 				echo "$dark-> -> -> "$foreground"match (regex 1): "(string match -r -i $regex1 $line | head -n 1)
 			end
-			if string match -q -r -i $regex2 $line
+			if string match -q -r -i '.*'$regex2'.*' $line
 				echo "$dark-> -> -> "$foreground"match (regex 2): "(string match -r -i $regex2 $line | head -n 1)
 			end
-			if string match -q -r -i $regex3 $line
+			if string match -q -r -i '.*'$regex3'.*' $line
 				echo "$dark-> -> -> "$foreground"match (regex 3): "(string match -r -i $regex3 $line | head -n 1)
 			end
 		end

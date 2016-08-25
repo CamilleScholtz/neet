@@ -4,7 +4,7 @@ set name      Mare
 set current   3
 set total     156
 set userpath  'Mare/Week 01~The Witch-Princess Birthday Cake'
-set userregex '.*#[0 ]*'$current'[^0-9].*$'
+set userregex '#[0 ]*'$current'[^0-9]'
 
 # set name    Ugly Alert
 # set current 1
