@@ -8,7 +8,7 @@ all:
 	@echo Run \'make install\' to install neet.
 
 install:
-	@echo "Installing binaries."
+	@echo "Installing executables."
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/bin
 	$(INSTALL_PROG) neet $(DESTDIR)$(PREFIX)/bin/neet
 	@echo "Installing configs."
@@ -23,7 +23,7 @@ install:
 	$(INSTALL_FILE) functions/cdv.fish $(DESTDIR)$(PREFIX)/share/fish/functions/cdv.fish
 
 uninstall:
-	@echo "Uninstalling binaries."
+	@echo "Uninstalling executables."
 	$(RM) $(DESTDIR)$(PREFIX)/bin/neet
 	@echo "Uninstalling configs."
 	$(RM) -r $(DESTDIR)$(PREFIX)/share/neet

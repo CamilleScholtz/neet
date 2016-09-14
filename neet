@@ -179,8 +179,8 @@ source $configdir/list
 getopts $argv | while read -l opt val
 	switch $opt
 		case h help
-			echo -e 'Usage: neet [options]\n'
-			echo 'options:'
+			echo -e 'Usage: neet [arguments]\n'
+			echo 'arguments:'
 			echo '  -d,   --debug           print debug info and exit'
 			echo '  -e,   --edit            edit list'
 			echo '  -l,   --location        print location and exit'
@@ -252,11 +252,11 @@ getopts $argv | while read -l opt val
 				end
 			else
 				echo "Please specify a set episode number." >/dev/stderr
+				exit 1
+			end
+		case '*'
+			echo 'Invalid argument, use -h for a list of arguments.' >/dev/stderr
 			exit 1
-		end
-	case '*'
-		echo 'Invalid option, use -h for help.' >/dev/stderr
-		exit 1
 	end
 end
 
