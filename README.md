@@ -18,9 +18,9 @@ jumps 20 episodes.
 ## Help
 
 ```
-Usage: neet [options]
+Usage: neet [arguments]
 
-options:
+arguments:
   -d,   --debug           print some helpful debug ouput
   -e,   --edit            edit list
   -n,   --next            set and play next episode
