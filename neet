@@ -13,11 +13,11 @@ set configdir $HOME/.neet
 
 # This function tries to fuzzy find the right directory
 function directory
-	# Lists all directories in mediadir
-	set -g directories (find $mediadir/* -maxdepth 0 -type d | string replace -r '.*/' '')
+    # Lists all directories in mediadir
+    set -g directories (find $mediadir/* -maxdepth 0 -type d | string replace -r '.*/' '')
 
-	# This is the actual fuzzy logic part, it compares the directory names with the active show name
-	set matches (
+    # This is the actual fuzzy logic part, it compares the directory names with the active show name
+    set matches (
 		for directory in $directories
 			set match 0
 
@@ -35,123 +35,123 @@ function directory
 		end | sort -n
 	)
 
-	# This gets the output with the most matches
-	set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
+    # This gets the output with the most matches
+    set -g path (echo $matches[-1] | cut -d ' ' -f 2-)
 
-	# Check if user has a custom path set, if that's the case, overwrite $path
-	if set -q userpath
-		set -g path $userpath
-	end
+    # Check if user has a custom path set, if that's the case, overwrite $path
+    if set -q userpath
+        set -g path $userpath
+    end
 
-	# Debug output
-	if test $debug = true
-		echo 'function directory'
-		echo "$dark-> "$foreground"directories:"
-		for line in (seq (count $matches))
-			echo "$dark-> -> $foreground"(echo $matches[$line] | cut -d ' ' -f 2-)
-			if test (echo $matches[$line] | cut -d ' ' -f 1) -ge 1
-				echo "$dark-> -> -> "$foreground"matches: "(echo $matches[$line] | cut -d ' ' -f 1)
-			end
-		end
-		if set -q userpath
-			echo "$dark-> "$foreground"path (userpath): $path"
-		else
-			echo "$dark-> "$foreground"path: $path"
-		end
+    # Debug output
+    if test $debug = true
+        echo 'function directory'
+        echo "$dark-> "$foreground"directories:"
+        for line in (seq (count $matches))
+            echo "$dark-> -> $foreground"(echo $matches[$line] | cut -d ' ' -f 2-)
+            if test (echo $matches[$line] | cut -d ' ' -f 1) -ge 1
+                echo "$dark-> -> -> "$foreground"matches: "(echo $matches[$line] | cut -d ' ' -f 1)
+            end
+        end
+        if set -q userpath
+            echo "$dark-> "$foreground"path (userpath): $path"
+        else
+            echo "$dark-> "$foreground"path: $path"
+        end
 
-		return
-	end
+        return
+    end
 
-	# Throw an error if no file is found
-	if not set -q path
-		# Throw an error if no file is found
-		echo "No "$bright"directory$foreground match." >/dev/stderr
-		exit 1
-	end
+    # Throw an error if no file is found
+    if not set -q path
+        # Throw an error if no file is found
+        echo "No "$bright"directory$foreground match." >/dev/stderr
+        exit 1
+    end
 end
 
 # This function tries to get the right file name
 function episode
-	# Lists all video files in the directory
-	set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|flv\)\(\.part\|\)$' | string replace -r '.*/' '')
+    # Lists all video files in the directory
+    set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|m4v\|flv\)\(\.part\|\)$' | string replace -r '.*/' '')
 
-	# Set regex thingies
-	set regex1 '(e|ep|episode|第)[0 ]*'$current'[^0-9]'
-	set regex2 '( |_|-|#|\.)[0 ]*'$current'[^0-9]'
-	set regex3 $current'[^0-9]'
+    # Set regex thingies
+    set regex1 '(e|ep|episode|第)[0 ]*'$current'[^0-9]'
+    set regex2 '( |_|-|#|\.)[0 ]*'$current'[^0-9]'
+    set regex3 $current'[^0-9]'
 
-	# Sets the right file (hopefully):
-	# Try regex1
-	set -g file (string match -r -i '.*'$regex1'.*' $episodes | head -n 1)
-	if test -z "$file"
-		# Try regex2
-		set -g file (string match -r -i '.*'$regex2'.*' $episodes | head -n 1)
-		if test -z "$file"
-			# Try regex3
-			set -g file (string match -r -i '.*'$regex3'.*' $episodes | head -n 1)
-		end
-	end
+    # Sets the right file (hopefully):
+    # Try regex1
+    set -g file (string match -r -i '.*'$regex1'.*' $episodes | head -n 1)
+    if test -z "$file"
+        # Try regex2
+        set -g file (string match -r -i '.*'$regex2'.*' $episodes | head -n 1)
+        if test -z "$file"
+            # Try regex3
+            set -g file (string match -r -i '.*'$regex3'.*' $episodes | head -n 1)
+        end
+    end
 
-	# Check if user has a custom regex set, if that's the case, (possibly) overwrite $file
-	if set -q userregex
-		set -g file (string match -r -i '.*'$userregex'.*' $episodes | head -n 1)
-	end
+    # Check if user has a custom regex set, if that's the case, (possibly) overwrite $file
+    if set -q userregex
+        set -g file (string match -r -i '.*'$userregex'.*' $episodes | head -n 1)
+    end
 
-	# Debug output
-	if test $debug = true
-		echo 'function episode'
-		echo "$dark-> "$foreground"episodes:"
-		for line in $episodes
-			if set -q userregex
-				if string match -q -r -i '.*'$userregex'.*' $line
-					echo "$dark-> -> -> "$foreground"match (userregex): "(string match -r -i $userregex $line | head -n 1)
-				end
-			end
-			echo "$dark-> -> $foreground$line"
-			if string match -q -r -i '.*'$regex1'.*' $line
-				echo "$dark-> -> -> "$foreground"match (regex 1): "(string match -r -i $regex1 $line | head -n 1)
-			end
-			if string match -q -r -i '.*'$regex2'.*' $line
-				echo "$dark-> -> -> "$foreground"match (regex 2): "(string match -r -i $regex2 $line | head -n 1)
-			end
-			if string match -q -r -i '.*'$regex3'.*' $line
-				echo "$dark-> -> -> "$foreground"match (regex 3): "(string match -r -i $regex3 $line | head -n 1)
-			end
-		end
-		echo "$dark-> "$foreground"file: $file"
+    # Debug output
+    if test $debug = true
+        echo 'function episode'
+        echo "$dark-> "$foreground"episodes:"
+        for line in $episodes
+            if set -q userregex
+                if string match -q -r -i '.*'$userregex'.*' $line
+                    echo "$dark-> -> -> "$foreground"match (userregex): "(string match -r -i $userregex $line | head -n 1)
+                end
+            end
+            echo "$dark-> -> $foreground$line"
+            if string match -q -r -i '.*'$regex1'.*' $line
+                echo "$dark-> -> -> "$foreground"match (regex 1): "(string match -r -i $regex1 $line | head -n 1)
+            end
+            if string match -q -r -i '.*'$regex2'.*' $line
+                echo "$dark-> -> -> "$foreground"match (regex 2): "(string match -r -i $regex2 $line | head -n 1)
+            end
+            if string match -q -r -i '.*'$regex3'.*' $line
+                echo "$dark-> -> -> "$foreground"match (regex 3): "(string match -r -i $regex3 $line | head -n 1)
+            end
+        end
+        echo "$dark-> "$foreground"file: $file"
 
-		return
-	end
+        return
+    end
 
-	# Throw an error if no file is found
-	if not set -q file
-		echo "No "$bright"episode$foreground match." >/dev/stderr
-		exit 1
-	end
+    # Throw an error if no file is found
+    if not set -q file
+        echo "No "$bright"episode$foreground match." >/dev/stderr
+        exit 1
+    end
 end
 
 # This function executes the userfunction and starts mpv
 function play
-	# Debug output
-	if test $debug = true
-		echo 'function play'
-		echo "$dark-> $foreground$playercommand "(string escape $mediadir/$path/$file)
-		exit 0
-	end
+    # Debug output
+    if test $debug = true
+        echo 'function play'
+        echo "$dark-> $foreground$playercommand "(string escape $mediadir/$path/$file)
+        exit 0
+    end
 
-	echo "Playing episode $current/$total, $bright$name$foreground."
+    echo "Playing episode $current/$total, $bright$name$foreground."
 
-	# Send warning on .part prefix
-	if string match -q -r '.part$' $file
-		echo "$dark-> "$foreground"This episode has not finished downloading yet"
-		echo "$dark-> "$foreground"Playback might be buggy or not work at all"
-	end
+    # Send warning on .part prefix
+    if string match -q -r '.part$' $file
+        echo "$dark-> "$foreground"This episode has not finished downloading yet"
+        echo "$dark-> "$foreground"Playback might be buggy or not work at all"
+    end
 
-	# Execute user set config function
-	userfunction
+    # Execute user set config function
+    userfunction
 
-	# Start mpv
-	eval {$playercommand} (string escape $mediadir/$path/$file)
+    # Start mpv
+    eval {$playercommand} (string escape $mediadir/$path/$file)
 end
 
 
@@ -162,9 +162,9 @@ set debug false
 
 # Load config
 if not test -f $configdir/config -a -f $configdir/list
-	echo "$configdir/config or $configdir/list not found." >/dev/stderr
-	echo "Move /usr/share/neet/config to $configdir, and create a list." >/dev/stderr
-	exit 1
+    echo "$configdir/config or $configdir/list not found." >/dev/stderr
+    echo "Move /usr/share/neet/config to $configdir, and create a list." >/dev/stderr
+    exit 1
 end
 source $configdir/config
 
@@ -177,87 +177,87 @@ set dark (set_color $dark)
 source $configdir/list
 
 getopts $argv | while read -l opt val
-	switch $opt
-		case h help
-			echo -e 'Usage: neet [arguments]\n'
-			echo 'arguments:'
-			echo '  -d,   --debug           print debug info and exit'
-			echo '  -e,   --edit            edit list'
-			echo '  -l,   --location        print location and exit'
-			echo '  -n,   --next            set and play next episode'
-			echo '  -p,   --previous        set and play previous episode'
-			echo '  -s,   --set             set and play specified episode'
-			echo '  -h,   --help            print help and exit'
-			exit 0
-		case d debug
-			set debug true
-		case e edit
-			eval $EDITOR $configdir/list
-			exit 0
-		case l location
-			directory
-			echo $mediadir/$path
-			exit 0
-		case n next
-			if test -n $val
-				if string match -q -r '^[0-9]*$' $val
-					set increment (math $current + $val)
-				else
-					echo "Increment episode value is not a number." >/dev/stderr
-					exit 1
-				end
-			else
-				set increment (math $current + 1)
-			end
+    switch $opt
+        case h help
+            echo -e 'Usage: neet [arguments]\n'
+            echo 'arguments:'
+            echo '  -d,   --debug           print debug info and exit'
+            echo '  -e,   --edit            edit list'
+            echo '  -l,   --location        print location and exit'
+            echo '  -n,   --next            set and play next episode'
+            echo '  -p,   --previous        set and play previous episode'
+            echo '  -s,   --set             set and play specified episode'
+            echo '  -h,   --help            print help and exit'
+            exit 0
+        case d debug
+            set debug true
+        case e edit
+            eval $EDITOR $configdir/list
+            exit 0
+        case l location
+            directory
+            echo $mediadir/$path
+            exit 0
+        case n next
+            if test -n $val
+                if string match -q -r '^[0-9]*$' $val
+                    set increment (math $current + $val)
+                else
+                    echo "Increment episode value is not a number." >/dev/stderr
+                    exit 1
+                end
+            else
+                set increment (math $current + 1)
+            end
 
-			if test $increment -le $total
-				sed -i "s/^set current $current\$/set current $increment/" $configdir/list
-				set current $increment
-			else
-				echo "Episode $total is the last episode." >/dev/stderr
-				exit 1
-			end
-		case p previous
-			if test -n $val
-				if string match -q -r '^[0-9]*$' $val
-					set decrement (math $current - $val)
-				else
-					echo "Decrement episode value is not a number." >/dev/stderr
-					exit 1
-				end
-			else
-				set decrement (math $current - 1)
-			end
+            if test $increment -le $total
+                sed -i "s/^set current $current\$/set current $increment/" $configdir/list
+                set current $increment
+            else
+                echo "Episode $total is the last episode." >/dev/stderr
+                exit 1
+            end
+        case p previous
+            if test -n $val
+                if string match -q -r '^[0-9]*$' $val
+                    set decrement (math $current - $val)
+                else
+                    echo "Decrement episode value is not a number." >/dev/stderr
+                    exit 1
+                end
+            else
+                set decrement (math $current - 1)
+            end
 
-			if test $decrement -ge 1
-				sed -i "s/^set current $current\$/set current $decrement/" $configdir/list
-				set current $decrement
-			else
-				echo 'Episode 1 is the first episode.' >/dev/stderr
-				exit 1
-			end
-		case s set
-			if test -n $val
-				if string match -q -r '^[0-9]*$' $val
-					if test $val -ge 1 -a $val -le $total
-						sed -i "s/^set current $current\$/set current $val/" $configdir/list
-						set current $val
-					else
-						echo "please specify an episode between 1 and $total." >/dev/stderr
-						exit 1
-					end
-				else
-					echo "Set episode value is not a number." >/dev/stderr
-					exit 1
-				end
-			else
-				echo "Please specify a set episode number." >/dev/stderr
-				exit 1
-			end
-		case '*'
-			echo 'Invalid argument, use -h for a list of arguments.' >/dev/stderr
-			exit 1
-	end
+            if test $decrement -ge 1
+                sed -i "s/^set current $current\$/set current $decrement/" $configdir/list
+                set current $decrement
+            else
+                echo 'Episode 1 is the first episode.' >/dev/stderr
+                exit 1
+            end
+        case s set
+            if test -n $val
+                if string match -q -r '^[0-9]*$' $val
+                    if test $val -ge 1 -a $val -le $total
+                        sed -i "s/^set current $current\$/set current $val/" $configdir/list
+                        set current $val
+                    else
+                        echo "please specify an episode between 1 and $total." >/dev/stderr
+                        exit 1
+                    end
+                else
+                    echo "Set episode value is not a number." >/dev/stderr
+                    exit 1
+                end
+            else
+                echo "Please specify a set episode number." >/dev/stderr
+                exit 1
+            end
+        case '*'
+            echo 'Invalid argument, use -h for a list of arguments.' >/dev/stderr
+            exit 1
+    end
 end
 
 directory
