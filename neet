@@ -18,21 +18,21 @@ function directory
 
     # This is the actual fuzzy logic part, it compares the directory names with the active show name
     set matches (
-		for directory in $directories
-			set match 0
+        for directory in $directories
+            set match 0
 
-			for word in (string split ' ' $name)
-				set wordmatch (string match -r -i -a -n $word $directory | string replace -r '.* ' '')
-				if test $status -ge 1
-					continue
-				end
-				set wordmatch (string join ' + ' $wordmatch)
+            for word in (string split ' ' $name)
+                set wordmatch (string match -r -i -a -n $word $directory | string replace -r '.* ' '')
+                if test $status -ge 1
+                    continue
+                end
+            set wordmatch (string join ' + ' $wordmatch)
 
-				set match (math $match + $wordmatch)
-			end
+            set match (math $match + $wordmatch)
+            end
 
-			echo $match $directory
-		end | sort -n
+            echo $match $directory
+        end | sort -n
 	)
 
     # This gets the output with the most matches
@@ -73,7 +73,7 @@ end
 # This function tries to get the right file name
 function episode
     # Lists all video files in the directory
-    set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|m4v\|flv\)\(\.part\|\)$' | string replace -r '.*/' '')
+    set episodes (find $mediadir/$path -type f -regex '.*\.\(avi\|mkv\|mp4\|m4v\|flv\|ts\)\(\.part\|\)$' | string replace -r '.*/' '')
 
     # Set regex thingies
     set regex1 '(e|ep|episode|第)[0 ]*'$current'[^0-9]'
